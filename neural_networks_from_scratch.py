@@ -22,8 +22,12 @@ def create_data(points, classes):
 
 X, y = create_data(100, 3)
 
-# plt.scatter(X[:, 0], X[:, 1], c=y, s=40, cmap=plt.cm.Spectral)
+# plt.scatter(X[:,0], X[:,1])
 # plt.show()
+
+# plt.scatter(X[:,0], X[:,1], c=y, cmap="brg")
+# plt.show()
+
 
 class Layer_Dense:
     def __init__(self, n_inputs, n_neurons):
