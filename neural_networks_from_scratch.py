@@ -20,7 +20,7 @@ def create_data(points, classes):
         y[ix] = class_number
     return X, y
 
-X, y = create_data(100, 3)
+X, y = create_data(100, 3) #100 featuresets of 3 classes
 
 # plt.scatter(X[:,0], X[:,1])
 # plt.show()
@@ -40,14 +40,16 @@ class Activation_ReLU:
     def forward(self, inputs):
         self.output = np.maximum(0, inputs)
 
-layer1 = Layer_Dense(4, 5)
-layer2 = Layer_Dense(5, 2)
+layer1 = Layer_Dense(2, 5)
+activation1 = Activation_ReLU()
+# layer2 = Layer_Dense(5, 2)
 
 layer1.forward(X)
-# print(layer1.output)
+activation1.forward(layer1.output)
+print(activation1.output)
 
-layer2.forward(layer1.output)
-print(layer2.output)
+# layer2.forward(layer1.output)
+# print(layer2.output)
 
 
 # ReLU Activation funtion:
