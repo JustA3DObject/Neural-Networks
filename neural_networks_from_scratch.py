@@ -22,6 +22,24 @@ layer2.forward(layer1.output)
 print(layer2.output)
 
 
+# ReLU Activation funtion:
+
+# inputs = [0, 2, -1, 3.3, -2.7, 1.1, 2.2, -100]
+# output = []
+
+# for i in inputs:
+#     if i > 0:
+#         output.append(i)
+#     elif i <= 0:
+#         output.append(0)
+
+#     # OR
+#     output.append(max(0, i))
+
+# # print(output)
+
+# Manually implimenting the network
+
 # inputs = [[1 ,2, 3, 2.5], 
 #           [2.0, 5.0, -1.0, 2.0], 
 #           [-1.5, 2.7, 3.3, -0.8]]
@@ -46,16 +64,16 @@ print(layer2.output)
 
 # print(layer2_outputs)
 
+# Another way to do the above function
 
+# layer_outputs  = []
+# for neuron_weights, neuron_bias in zip(weights, biases):
+#     neuron_output = 0
+#     for n_input, weight in zip(inputs, neuron_weights):
+#         neuron_output += n_input*weight
+#     neuron_output += neuron_bias
+#     layer_outputs.append(neuron_output)
 
-# # layer_outputs  = []
-# # for neuron_weights, neuron_bias in zip(weights, biases):
-# #     neuron_output = 0
-# #     for n_input, weight in zip(inputs, neuron_weights):
-# #         neuron_output += n_input*weight
-# #     neuron_output += neuron_bias
-# #     layer_outputs.append(neuron_output)
-
-# # print(layer_outputs)
+# print(layer_outputs)
 
 
