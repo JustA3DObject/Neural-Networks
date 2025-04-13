@@ -138,5 +138,3 @@ print("Loss:", loss)
 #     layer_outputs.append(neuron_output)
 
 # print(layer_outputs)
-
-
