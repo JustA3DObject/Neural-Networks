@@ -231,3 +231,10 @@ print("-" * 35)
 for electrode in ecbl_counts:
     diff = abs(ecbl_counts[electrode] - eobl_counts[electrode])
     print(f"{electrode:<8} | {ecbl_counts[electrode]:<5} | {eobl_counts[electrode]:<5} | {diff}")
+
+# Problem 3: Scaleogram Visualization
+print("\nProblem 3: Scaleogram Generation")
+target_electrode = 'C3'
+print(f"Generating scaleogram for {target_electrode}...")
+cwt_coeffs = ecbl.compute_scaleogram(target_electrode)
+ecbl.visualize_scaleogram(cwt_coeffs, target_electrode)
