@@ -219,3 +219,15 @@ eobl.detect_all_spindles()
 print(f"ECBL Total Spindles: {ecbl.get_total_spindles()}")
 print(f"EOBL Total Spindles: {eobl.get_total_spindles()}")
 print(f"Absolute Difference: {abs(ecbl.get_total_spindles() - eobl.get_total_spindles())}")
+
+# Problem 2: Electrode-wise Comparison
+print("\nProblem 2: Electrode-wise Comparison")
+ecbl_counts = ecbl.get_electrode_counts()
+eobl_counts = eobl.get_electrode_counts()
+
+# Print formatted comparison table
+print(f"{'Electrode':<8} | {'ECBL':<5} | {'EOBL':<5} | Difference")
+print("-" * 35)
+for electrode in ecbl_counts:
+    diff = abs(ecbl_counts[electrode] - eobl_counts[electrode])
+    print(f"{electrode:<8} | {ecbl_counts[electrode]:<5} | {eobl_counts[electrode]:<5} | {diff}")
