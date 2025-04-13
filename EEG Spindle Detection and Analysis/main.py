@@ -15,6 +15,8 @@ class EEGSpindleAnalyzer:
         self.raw = None  # MNE Raw object container
         self.ica = None  # Independent Component Analysis results
         self.filtered_data = None  # Alpha-filtered EEG data
+        self.spindle_counts = {}  # Dictionary: {electrode: spindle_count}
+        self.spindle_events = {}  # Dictionary: {electrode: [(start, end)]}
 
         # Execute processing pipeline
         self.load_data()      # Load data
@@ -109,3 +111,19 @@ class EEGSpindleAnalyzer:
                 spindles.append((start_time, end_time))
                 
         return spindles
+
+    def detect_all_spindles(self, threshold=1.5, min_duration=0.5):
+        for channel in self.raw.ch_names:
+            spindles = self.detect_spindles_electrode(
+                channel, 
+                threshold=threshold,
+                min_duration=min_duration
+            )
+            self.spindle_counts[channel] = len(spindles)
+            self.spindle_events[channel] = spindles
+
+    def get_total_spindles(self):
+        return sum(self.spindle_counts.values())
+
+    def get_electrode_counts(self):
+        return self.spindle_counts.copy()
