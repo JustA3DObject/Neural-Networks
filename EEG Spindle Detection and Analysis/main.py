@@ -63,3 +63,49 @@ class EEGSpindleAnalyzer:
             method='iir' # Infinite Impulse Response filter
         )
         self.filtered_data = self.raw.get_data()
+
+    def detect_spindles_electrode(self, electrode, threshold=1.5, min_duration=0.5):
+
+        # Get electrode index and filtered signal
+        idx = self.raw.ch_names.index(electrode)
+        signal = self.filtered_data[idx, :]
+        
+        # Compute analytic signal using Hilbert transform
+        analytic_signal = hilbert(signal)
+        amplitude_envelope = np.abs(analytic_signal)
+        
+        # Threshold detection logic
+        thresholded = amplitude_envelope > threshold
+        state_changes = np.diff(thresholded.astype(int))
+        
+        # Find spindle start and end indices
+        starts = np.where(state_changes == 1)[0]  # Rising edges
+        ends = np.where(state_changes == -1)[0]   # Falling edges
+
+        # Handle edge cases
+        # Case 1: Signal starts above threshold
+        if len(ends) == 0 and len(starts) > 0:
+            ends = np.array([len(thresholded) - 1])
+            
+        # Case 2: No spindles detected
+        if len(starts) == 0:
+            return []
+            
+        # Case 3: First end before first start
+        if ends[0] < starts[0]:
+            starts = np.insert(starts, 0, 0)
+            
+        # Case 4: Last start without matching end
+        if starts[-1] > ends[-1]:
+            ends = np.append(ends, len(thresholded)-1)
+
+        # Convert indices to time durations
+        spindles = []
+        for start_idx, end_idx in zip(starts, ends):
+            duration = (end_idx - start_idx) / self.sfreq
+            if duration >= min_duration:
+                start_time = start_idx / self.sfreq
+                end_time = end_idx / self.sfreq
+                spindles.append((start_time, end_time))
+                
+        return spindles
