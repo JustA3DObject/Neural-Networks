@@ -127,3 +127,23 @@ class EEGSpindleAnalyzer:
 
     def get_electrode_counts(self):
         return self.spindle_counts.copy()
+    
+    def compute_scaleogram(self, electrode=None):
+        # Compute wavelet scaleogram using Continuous Wavelet Transform (CWT)
+       
+        # Select data source
+        if electrode:
+            idx = self.raw.ch_names.index(electrode)
+            data = self.filtered_data[idx, :]
+        else:
+            data = self.filtered_data.mean(axis=0)  # Global average
+            
+        # Continuous Wavelet Transform parameters
+        scales = np.arange(1, 128)  # Range of wavelet scales
+        coefficients, _ = pywt.cwt(
+            data, 
+            scales, 
+            wavelet='morl',  # Morlet wavelet
+            sampling_period=1/self.sfreq  # Time between samples
+        )
+        return coefficients
