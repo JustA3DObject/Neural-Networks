@@ -238,3 +238,8 @@ target_electrode = 'C3'
 print(f"Generating scaleogram for {target_electrode}...")
 cwt_coeffs = ecbl.compute_scaleogram(target_electrode)
 ecbl.visualize_scaleogram(cwt_coeffs, target_electrode)
+
+# Problem 4: Epoch-based Analysis
+print("\nProblem 4: Epoch-based Visualization")
+print("Generating 10-second epoch plots...")
+ecbl.epoch_analysis()
