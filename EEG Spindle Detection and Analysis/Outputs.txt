@@ -1,0 +1,87 @@
+Problem 1: Total Spindle Count Comparison
+Creating RawArray with float64 data, n_channels=31, n_times=76001
+    Range : 0 ... 76000 =      0.000 ...   148.438 secs
+Ready.
+\EEG Spindle Detection and Analysis\main.py:58: RuntimeWarning: The data has not been high-pass filtered. For good ICA performance, it should be high-pass filtered (e.g., with a 1.0 Hz lower bound) before fitting ICA.
+  ica.fit(self.raw)
+Fitting ICA to data using 31 channels (please be patient, this may take a while)
+Selecting by number: 20 components
+Computing Infomax ICA
+Fitting ICA took 25.1s.
+Filtering raw data in 1 contiguous segment
+Setting up band-pass filter from 8 - 13 Hz
+
+IIR filter parameters
+---------------------
+Butterworth bandpass zero-phase (two-pass forward and reverse) non-causal filter:
+- Filter order 16 (effective, after forward-backward)
+- Cutoffs at 8.00, 13.00 Hz: -6.02, -6.02 dB
+
+Creating RawArray with float64 data, n_channels=31, n_times=76001
+    Range : 0 ... 76000 =      0.000 ...   148.438 secs
+Ready.
+\EEG Spindle Detection and Analysis\main.py:58: RuntimeWarning: The data has not been high-pass filtered. For good ICA performance, it should be high-pass filtered (e.g., with a 1.0 Hz lower bound) before fitting ICA.
+  ica.fit(self.raw)
+Fitting ICA to data using 31 channels (please be patient, this may take a while)
+Selecting by number: 20 components
+Computing Infomax ICA
+Fitting ICA took 24.9s.
+Filtering raw data in 1 contiguous segment
+Setting up band-pass filter from 8 - 13 Hz
+
+IIR filter parameters
+---------------------
+Butterworth bandpass zero-phase (two-pass forward and reverse) non-causal filter:
+- Filter order 16 (effective, after forward-backward)
+- Cutoffs at 8.00, 13.00 Hz: -6.02, -6.02 dB
+
+ECBL Total Spindles: 0
+EOBL Total Spindles: 0
+Absolute Difference: 0
+
+Problem 2: Electrode-wise Comparison
+Electrode | ECBL  | EOBL  | Difference
+-----------------------------------
+C3       | 0     | 0     | 0
+C4       | 0     | 0     | 0
+CP1      | 0     | 0     | 0
+CP2      | 0     | 0     | 0
+CP5      | 0     | 0     | 0
+CP6      | 0     | 0     | 0
+F3       | 0     | 0     | 0
+F4       | 0     | 0     | 0
+F7       | 0     | 0     | 0
+F8       | 0     | 0     | 0
+Fz       | 0     | 0     | 0
+FC1      | 0     | 0     | 0
+FC2      | 0     | 0     | 0
+FC5      | 0     | 0     | 0
+FC6      | 0     | 0     | 0
+Fp1      | 0     | 0     | 0
+Fp2      | 0     | 0     | 0
+FT9      | 0     | 0     | 0
+FT10     | 0     | 0     | 0
+O1       | 0     | 0     | 0
+O2       | 0     | 0     | 0
+Oz       | 0     | 0     | 0
+P3       | 0     | 0     | 0
+P4       | 0     | 0     | 0
+P7       | 0     | 0     | 0
+P8       | 0     | 0     | 0
+Pz       | 0     | 0     | 0
+T7       | 0     | 0     | 0
+T8       | 0     | 0     | 0
+TP10     | 0     | 0     | 0
+TP9      | 0     | 0     | 0
+
+Problem 3: Scaleogram Generation
+Generating scaleogram for C3...
+
+Problem 4: Epoch-based Visualization
+Generating 10-second epoch plots...
+Not setting metadata
+14 matching events found
+No baseline correction applied
+0 projection items activated
+Using data from preloaded Raw for 14 events and 5120 original time points ...
+0 bad epochs dropped
