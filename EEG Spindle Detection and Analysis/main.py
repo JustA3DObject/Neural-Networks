@@ -185,3 +185,25 @@ class EEGSpindleAnalyzer:
         title = f'Scaleogram - {electrode}' if electrode else 'Global Scaleogram'
         plt.title(title)
         plt.show()
+
+    def epoch_analysis(self, epoch_duration=10):
+ 
+        # Create epochs using MNE's built-in function
+        epochs = mne.make_fixed_length_epochs(
+            self.raw,
+            duration=epoch_duration,
+            preload=True  # Load data into memory
+        )
+        
+        # Visualize each epoch
+        for epoch_num in range(len(epochs)):
+            # Get epoch data (shape: 1 × channels × time)
+            epoch_data = epochs[epoch_num].get_data()[0]
+            
+            # Create plot
+            plt.figure(figsize=(12, 6))
+            plt.plot(epochs.times, epoch_data.T)  # Plot all channels
+            plt.title(f'Epoch {epoch_num+1} ({epoch_duration}s)')
+            plt.xlabel('Time (seconds)')
+            plt.ylabel('Amplitude (μV)')
+            plt.show()
