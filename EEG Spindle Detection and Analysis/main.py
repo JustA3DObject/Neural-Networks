@@ -147,3 +147,41 @@ class EEGSpindleAnalyzer:
             sampling_period=1/self.sfreq  # Time between samples
         )
         return coefficients
+
+    def visualize_scaleogram(self, coefficients, electrode=None):
+        # Visualize scaleogram with spindle overlays
+  
+        # Create time axis
+        time_points = coefficients.shape[1]
+        time_axis = np.arange(time_points) / self.sfreq
+        
+        # Create plot
+        plt.figure(figsize=(12, 6))
+        
+        # Plot wavelet magnitude
+        plt.imshow(
+            np.abs(coefficients),  # Magnitude of complex coefficients
+            extent=[time_axis[0], time_axis[-1], 1, 128],  # Axis ranges
+            cmap='PRGn',  # Purple-Green colormap
+            aspect='auto',  # Automatic aspect ratio
+            interpolation='nearest'  # Pixel-based interpolation
+        )
+        
+        # Add spindle overlays if specified
+        if electrode:
+            spindles = self.spindle_events.get(electrode, [])
+            for start, end in spindles:
+                plt.axvspan(
+                    start, end,
+                    color='red',
+                    alpha=0.3,  # Semi-transparent
+                    label='Spindle' if start == spindles[0][0] else ''
+                )
+                
+        # Add plot decorations
+        plt.colorbar(label='Coefficient Magnitude')
+        plt.ylabel('Wavelet Scale')
+        plt.xlabel('Time (seconds)')
+        title = f'Scaleogram - {electrode}' if electrode else 'Global Scaleogram'
+        plt.title(title)
+        plt.show()
