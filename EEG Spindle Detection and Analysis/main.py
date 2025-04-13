@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import mne  # EEG processing toolkit
 from mne.preprocessing import ICA  # Artifact removal
 import pywt  # Wavelet transforms
+from scipy.signal import hilbert  # Signal envelope detection
 
 class EEGSpindleAnalyzer:
 
@@ -207,3 +208,14 @@ class EEGSpindleAnalyzer:
             plt.xlabel('Time (seconds)')
             plt.ylabel('Amplitude (μV)')
             plt.show()
+
+# Problem 1: Total Spindle Count Comparison
+print("\nProblem 1: Total Spindle Count Comparison")
+ecbl = EEGSpindleAnalyzer('Original_Data.xlsx', 'ECBL')
+ecbl.detect_all_spindles()
+eobl = EEGSpindleAnalyzer('Original_Data.xlsx', 'EOBL')
+eobl.detect_all_spindles()
+
+print(f"ECBL Total Spindles: {ecbl.get_total_spindles()}")
+print(f"EOBL Total Spindles: {eobl.get_total_spindles()}")
+print(f"Absolute Difference: {abs(ecbl.get_total_spindles() - eobl.get_total_spindles())}")
