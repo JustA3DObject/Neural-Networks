@@ -1,13 +1,13 @@
 import pandas as pd  
 import numpy as np   
-import matplotlib.pyplot as plt 
 import mne  # EEG processing toolkit
 from mne.preprocessing import ICA  # Artifact removal
 import pywt  # Wavelet transforms
+import matplotlib.pyplot as plt 
 from scipy.signal import hilbert  # Signal envelope detection
 
 class EEGSpindleAnalyzer:
-
+    
     def __init__(self, file_path, sheet_name, sfreq=512):
 
         self.file_path = file_path
@@ -16,23 +16,21 @@ class EEGSpindleAnalyzer:
         self.raw = None  # MNE Raw object container
         self.ica = None  # Independent Component Analysis results
         self.filtered_data = None  # Alpha-filtered EEG data
-        self.spindle_counts = {}  # Dictionary: {electrode: spindle_count}
-        self.spindle_events = {}  # Dictionary: {electrode: [(start, end)]}
+        self.spindle_counts = {} 
+        self.spindle_events = {}  
 
         # Execute processing pipeline
-        self.load_data()      # Load data
-        self.apply_ica()      # Apply ICA
-        self.filter_alpha()   # Bandpass filter
+        self.load_data()      # Step 1: Load data
+        self.apply_ica()      # Step 2: Apply ICA
+        self.filter_alpha()   # Step 3: Bandpass filter
 
     def load_data(self):
         df = pd.read_excel(self.file_path, sheet_name=self.sheet_name)
         
-        # Remove time column if present (non-EEG channel)
         if 'time' in df.columns:
             df = df.drop(columns=['time'])
             
-        # Convert data to MNE-compatible format
-        # Transpose because MNE expects channels × time
+
         data = df.values.T * 1e-6  # Convert µV to volts
         ch_names = df.columns.tolist()  # Extract channel names
         
@@ -50,8 +48,8 @@ class EEGSpindleAnalyzer:
         # Initialize ICA with 20 components (typical for EEG)
         ica = ICA(
             n_components=20,
-            method='infomax',  # Using Infomax instead of FastICA
-            random_state=97  # Seed for reproducibility
+            method='infomax', 
+            random_state=97 
         )
         
         # Fit ICA to the raw EEG data
@@ -68,7 +66,6 @@ class EEGSpindleAnalyzer:
         self.filtered_data = self.raw.get_data()
 
     def detect_spindles_electrode(self, electrode, threshold=1.5, min_duration=0.5):
-
         # Get electrode index and filtered signal
         idx = self.raw.ch_names.index(electrode)
         signal = self.filtered_data[idx, :]
@@ -85,7 +82,7 @@ class EEGSpindleAnalyzer:
         starts = np.where(state_changes == 1)[0]  # Rising edges
         ends = np.where(state_changes == -1)[0]   # Falling edges
 
-        # Handle edge cases
+        # Edge cases
         # Case 1: Signal starts above threshold
         if len(ends) == 0 and len(starts) > 0:
             ends = np.array([len(thresholded) - 1])
@@ -128,11 +125,8 @@ class EEGSpindleAnalyzer:
 
     def get_electrode_counts(self):
         return self.spindle_counts.copy()
-    
+
     def compute_scaleogram(self, electrode=None):
-        # Compute wavelet scaleogram using Continuous Wavelet Transform (CWT)
-       
-        # Select data source
         if electrode:
             idx = self.raw.ch_names.index(electrode)
             data = self.filtered_data[idx, :]
@@ -150,16 +144,11 @@ class EEGSpindleAnalyzer:
         return coefficients
 
     def visualize_scaleogram(self, coefficients, electrode=None):
-        # Visualize scaleogram with spindle overlays
-  
-        # Create time axis
         time_points = coefficients.shape[1]
         time_axis = np.arange(time_points) / self.sfreq
         
-        # Create plot
         plt.figure(figsize=(12, 6))
         
-        # Plot wavelet magnitude
         plt.imshow(
             np.abs(coefficients),  # Magnitude of complex coefficients
             extent=[time_axis[0], time_axis[-1], 1, 128],  # Axis ranges
@@ -179,7 +168,6 @@ class EEGSpindleAnalyzer:
                     label='Spindle' if start == spindles[0][0] else ''
                 )
                 
-        # Add plot decorations
         plt.colorbar(label='Coefficient Magnitude')
         plt.ylabel('Wavelet Scale')
         plt.xlabel('Time (seconds)')
@@ -188,20 +176,17 @@ class EEGSpindleAnalyzer:
         plt.show()
 
     def epoch_analysis(self, epoch_duration=10):
- 
-        # Create epochs using MNE's built-in function
+
         epochs = mne.make_fixed_length_epochs(
             self.raw,
             duration=epoch_duration,
-            preload=True  # Load data into memory
+            preload=True 
         )
         
-        # Visualize each epoch
         for epoch_num in range(len(epochs)):
             # Get epoch data (shape: 1 × channels × time)
             epoch_data = epochs[epoch_num].get_data()[0]
             
-            # Create plot
             plt.figure(figsize=(12, 6))
             plt.plot(epochs.times, epoch_data.T)  # Plot all channels
             plt.title(f'Epoch {epoch_num+1} ({epoch_duration}s)')
@@ -210,7 +195,7 @@ class EEGSpindleAnalyzer:
             plt.show()
 
 # Problem 1: Total Spindle Count Comparison
-print("\nProblem 1: Total Spindle Count Comparison")
+print("\n=== Problem 1: Total Spindle Count Comparison ===")
 ecbl = EEGSpindleAnalyzer('Original_Data.xlsx', 'ECBL')
 ecbl.detect_all_spindles()
 eobl = EEGSpindleAnalyzer('Original_Data.xlsx', 'EOBL')
@@ -221,11 +206,10 @@ print(f"EOBL Total Spindles: {eobl.get_total_spindles()}")
 print(f"Absolute Difference: {abs(ecbl.get_total_spindles() - eobl.get_total_spindles())}")
 
 # Problem 2: Electrode-wise Comparison
-print("\nProblem 2: Electrode-wise Comparison")
+print("\n=== Problem 2: Electrode-wise Comparison ===")
 ecbl_counts = ecbl.get_electrode_counts()
 eobl_counts = eobl.get_electrode_counts()
 
-# Print formatted comparison table
 print(f"{'Electrode':<8} | {'ECBL':<5} | {'EOBL':<5} | Difference")
 print("-" * 35)
 for electrode in ecbl_counts:
@@ -233,13 +217,13 @@ for electrode in ecbl_counts:
     print(f"{electrode:<8} | {ecbl_counts[electrode]:<5} | {eobl_counts[electrode]:<5} | {diff}")
 
 # Problem 3: Scaleogram Visualization
-print("\nProblem 3: Scaleogram Generation")
+print("\n=== Problem 3: Scaleogram Generation ===")
 target_electrode = 'C3'
 print(f"Generating scaleogram for {target_electrode}...")
 cwt_coeffs = ecbl.compute_scaleogram(target_electrode)
 ecbl.visualize_scaleogram(cwt_coeffs, target_electrode)
 
 # Problem 4: Epoch-based Analysis
-print("\nProblem 4: Epoch-based Visualization")
+print("\n=== Problem 4: Epoch-based Visualization ===")
 print("Generating 10-second epoch plots...")
 ecbl.epoch_analysis()
